@@ -3,7 +3,7 @@ TEMPO is a lightweight template parser for Go templates
 
 ### Inputs
 * template folder name (with path which relative to the project folder)
-* template file anem (with path which relative to the template folder)
+* template file name (with path which relative to the template folder)
 * data for the template file
 
 ### Example
