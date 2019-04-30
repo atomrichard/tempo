@@ -8,8 +8,11 @@ import (
 	"strings"
 )
 
-// GetTemplate has file path, data for the template file, path for the template directory
-func GetTemplate(filePath string, data interface{}, viewPath string) string {
+// GetTemplate has 3 inputs:
+// * template folder name (with path which relative to the project folder)
+// * template file anem (with path which relative to the template folder)
+// * data for the template file
+func GetTemplate(viewPath string, filePath string, data interface{}) string {
 	var tplBuffer bytes.Buffer
 
 	filePath = strings.Trim(filePath, "/")
