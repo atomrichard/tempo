@@ -41,6 +41,7 @@ func GetTemplate(viewPath string, filePath string, data interface{}) string {
 }
 
 func visit(files *[]string, ftype string) filepath.WalkFunc {
+		ftype = "." + ftype
     return func(path string, info os.FileInfo, err error) error {
         if err != nil {
             log.Fatal(err)
@@ -55,24 +56,20 @@ func visit(files *[]string, ftype string) filepath.WalkFunc {
 
 // MergeFiles has 4 inputs:
 // * folderPath (with path which relative to the project folder)
+// * fileExtension the extension of the files which should be included (rn. it doesn't suport multiple extensions)
 // * contentType for the proper response header (eg.: "text/javascript; charset=utf-8")
 // * cacheAge cache max age as string
-// * request and response writers
-func MergeFiles(folderPath string, contentType string, cacheAge string, w http.ResponseWriter, r *http.Request){
-	w.Header().Set("Content-Type", contentType)
-	w.Header().Set("Cache-Control", "public, max-age=" + cacheAge)
+func MergeFiles(folderPath string, fileExtension string, contentType string, cacheAge string) http.HandlerFunc{
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", contentType)
+		w.Header().Set("Cache-Control", "public, max-age=" + cacheAge)
 
     var files []string
-		s := r.URL.Path[1:]
-    //fmt.Println(s)
-		s = strings.Replace(s, ".js", "", -1)
-    root := fmt.Sprintf("./_%s/", s)
-		err := filepath.Walk(root, visit(&files, ".js"))
+    root := fmt.Sprintf("./%s/", folderPath)
+		err := filepath.Walk(root, visit(&files, fileExtension))
     if err != nil {
 			fmt.Println(err)
-      //panic(err)
     }
-		//w.Header().Set("Content-Type", "application/json; charset=utf-8")
     for _, file := range files {
         //fmt.Println(file)
 
@@ -84,6 +81,7 @@ func MergeFiles(folderPath string, contentType string, cacheAge string, w http.R
 
 				fmt.Fprintf(w, str)
     }
+	})
 }
 
 func fileExists(filename string) bool {
