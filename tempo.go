@@ -54,7 +54,7 @@ func visit(files *[]string, ftype string) filepath.WalkFunc {
     }
 }
 
-// MergeFiles has 4 inputs:
+// MergeFiles is for merging files in a folder (eg. js files) has 4 inputs:
 // * folderPath (with path which relative to the project folder)
 // * fileExtension the extension of the files which should be included (rn. it doesn't suport multiple extensions)
 // * contentType for the proper response header (eg.: "text/javascript; charset=utf-8")
